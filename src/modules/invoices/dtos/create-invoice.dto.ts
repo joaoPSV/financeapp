@@ -8,6 +8,4 @@ export class CreateInvoiceDto {
   type: InvoiceType;
 
   actionDate: Date;
-
-  userId: number;
 }

@@ -8,10 +8,10 @@ export class InvoicesRepository {
     @InjectRepository(Invoice) private repository: Repository<Invoice>,
   ) {}
 
-  async save(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
+  async save(createInvoiceDto: CreateInvoiceDto, userId): Promise<Invoice> {
     const result = await this.repository.save({
       user: {
-        id: createInvoiceDto.userId,
+        id: userId,
       },
       ...createInvoiceDto,
     });

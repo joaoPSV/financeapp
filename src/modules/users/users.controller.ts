@@ -1,9 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { LoginDto } from './dtos/login.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { EmailDto } from './dtos/email.dto';
+import { sign } from 'jsonwebtoken';
+import {
+  AuthInterceptor,
+  CustomRequest,
+} from 'src/interceptors/auth.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -26,16 +40,25 @@ export class UsersController {
 
     return {
       message: 'User logged!',
-      data: user,
+      data: {
+        user,
+        token: sign(user, process.env.SECRET_KEY, {
+          expiresIn: '2 days',
+        }),
+      },
     };
   }
 
-  @Patch('/change-password/:userId')
+  @UseInterceptors(AuthInterceptor)
+  @Patch('/change-password')
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
-    @Param('userId') userId: string,
+    @Req() request: CustomRequest,
   ): Promise<object> {
-    await this.usersService.changePassword(changePasswordDto, Number(userId));
+    await this.usersService.changePassword(
+      changePasswordDto,
+      Number(request.user.id),
+    );
 
     return {
       message: 'Password changed!',

@@ -8,8 +8,11 @@ import { Invoice } from './entities/invoice';
 export class InvoicesService {
   constructor(private repository: InvoicesRepository) {}
 
-  async save(createInvoiceDto: CreateInvoiceDto): Promise<void> {
-    await this.repository.save(createInvoiceDto);
+  async save(
+    createInvoiceDto: CreateInvoiceDto,
+    userId: number,
+  ): Promise<void> {
+    await this.repository.save(createInvoiceDto, userId);
   }
 
   private sumBalance(invoices: Invoice[]): number {

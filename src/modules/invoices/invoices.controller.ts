@@ -1,14 +1,28 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dtos/create-invoice.dto';
+import {
+  AuthInterceptor,
+  CustomRequest,
+} from 'src/interceptors/auth.interceptor';
 
+@UseInterceptors(new AuthInterceptor())
 @Controller('invoices')
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
-  @Get('balance/:userId')
-  async getBalance(@Param('userId') userId: number): Promise<object> {
-    const balance = await this.invoicesService.getBalance(userId);
+  @Get('balance')
+  async getBalance(@Req() request: CustomRequest): Promise<object> {
+    const balance = await this.invoicesService.getBalance(request.user.id);
     return {
       message: 'Balance returned',
       data: {
@@ -18,8 +32,11 @@ export class InvoicesController {
   }
 
   @Post()
-  async create(@Body() createInvoiceDto: CreateInvoiceDto): Promise<object> {
-    await this.invoicesService.save(createInvoiceDto);
+  async create(
+    @Req() request: CustomRequest,
+    @Body() createInvoiceDto: CreateInvoiceDto,
+  ): Promise<object> {
+    await this.invoicesService.save(createInvoiceDto, request.user.id);
     return {
       message: 'Invoice created!',
       data: {},
@@ -30,10 +47,10 @@ export class InvoicesController {
   async findAll(
     @Query('month') month: number,
     @Query('year') year: number,
-    @Query('userId') userId: number,
+    @Req() request: CustomRequest,
   ): Promise<object> {
     const invoices = await this.invoicesService.findAll(
-      Number(userId),
+      Number(request.user.id),
       Number(month),
       Number(year),
     );
