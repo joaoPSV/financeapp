@@ -1,17 +1,25 @@
 import { createTransport } from 'nodemailer';
 import { LoginDto } from 'src/modules/users/dtos/login.dto';
 
-const transporter = createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.NODEMAILER_USER,
-    pass: process.env.NODEMAILER_PASS,
-  },
-});
+interface NodeMailerData {
+  user: string;
+  pass: string;
+}
 
-export const sendNewPassword = async (data: LoginDto): Promise<void> => {
+export const sendNewPassword = async (
+  data: LoginDto,
+  nodeMailerData: NodeMailerData,
+): Promise<void> => {
+  const transporter = createTransport({
+    service: 'gmail',
+    auth: {
+      user: nodeMailerData.user,
+      pass: nodeMailerData.pass,
+    },
+  });
+
   const mailOptions = {
-    from: process.env.NODEMAILER_USER,
+    from: nodeMailerData.user,
     to: data.email,
     subject: 'Your new password',
     html: `<p>Your new password is ${data.password}</p>`,

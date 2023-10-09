@@ -75,9 +75,15 @@ export class UsersService {
       password: encryptPassword(newPassword),
     });
 
-    await sendNewPassword({
-      email: user.email,
-      password: newPassword,
-    });
+    await sendNewPassword(
+      {
+        email: user.email,
+        password: newPassword,
+      },
+      {
+        user: process.env.NODEMAILER_USER,
+        pass: process.env.NODEMAILER_PASS,
+      },
+    );
   }
 }
