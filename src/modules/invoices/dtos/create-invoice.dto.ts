@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsString } from 'class-validator';
 import { InvoiceType } from '../enums/invoiceType.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -24,6 +24,6 @@ export class CreateInvoiceDto {
   @ApiProperty({
     example: '2024-01-01',
   })
-  @IsDate()
+  @IsDateString()
   actionDate: Date;
 }
