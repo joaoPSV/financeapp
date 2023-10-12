@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Invoice } from './entities/invoice';
-import { Between, Repository } from 'typeorm';
+import { Between, LessThanOrEqual, Repository } from 'typeorm';
 import { CreateInvoiceDto } from './dtos/create-invoice.dto';
 
 export class InvoicesRepository {
@@ -13,6 +13,9 @@ export class InvoicesRepository {
       user: {
         id: userId,
       },
+      category: {
+        id: createInvoiceDto.categoryId,
+      },
       ...createInvoiceDto,
     });
 
@@ -23,6 +26,7 @@ export class InvoicesRepository {
     const result = await this.repository.find({
       where: {
         user: { id: userId },
+        actionDate: LessThanOrEqual(new Date()),
       },
     });
 
@@ -38,6 +42,9 @@ export class InvoicesRepository {
       where: {
         actionDate: Between(initialDate, endDate),
         user: { id: userId },
+      },
+      relations: {
+        category: true,
       },
     });
 

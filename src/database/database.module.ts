@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Category } from 'src/modules/categories/entities/category';
 import { Invoice } from 'src/modules/invoices/entities/invoice';
 import { User } from 'src/modules/users/entities/user';
 
@@ -17,7 +18,7 @@ import { User } from 'src/modules/users/entities/user';
         host: process.env.DATABASE_HOST,
         port: Number(process.env.DATABASE_PORT),
         synchronize: true,
-        entities: [User, Invoice],
+        entities: [User, Invoice, Category],
         migrations: [],
         migrationsRun: true,
         logging: true,

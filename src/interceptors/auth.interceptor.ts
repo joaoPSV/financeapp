@@ -28,7 +28,6 @@ export class AuthInterceptor implements NestInterceptor {
         }
 
         const decodedToken = verify(token, process.env.SECRET_KEY);
-        console.log('decoded ', decodedToken);
         (request as JwtPayload).user = decodedToken;
       } catch (err) {
         throw new UnauthorizedException('Invalid token!');

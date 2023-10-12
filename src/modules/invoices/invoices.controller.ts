@@ -64,7 +64,7 @@ export class InvoicesController {
     return {
       message: 'Invoices returned',
       data: {
-        invoices,
+        ...invoices,
       },
     };
   }

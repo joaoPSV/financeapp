@@ -22,6 +22,11 @@ export class CreateInvoiceDto {
   type: InvoiceType;
 
   @ApiProperty({
+    example: 1,
+  })
+  categoryId: number;
+
+  @ApiProperty({
     example: '2024-01-01',
   })
   @IsDateString()

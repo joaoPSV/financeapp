@@ -38,7 +38,6 @@ export class InvoicesService {
         ? `${year + 1}-01-01 00:00:00`
         : `${year}-${month + 1}-01 00:00:00`;
 
-    console.log(endDate);
     const invoices = await this.repository.getInvoicesByUserIdAndDate(
       userId,
       new Date(initialDate),
